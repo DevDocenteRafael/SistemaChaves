@@ -1,3 +1,4 @@
+// Reúne configurações e elementos da interface usados pelo fluxo de reservas.
 const config = window.RESERVAS_CONFIG;
 const rooms = config.rooms;
 const roomCards = document.querySelector('#room-cards');
@@ -18,6 +19,7 @@ const timeSlots = Array.from({ length: 15 }, (_, index) => {
   return `${String(hour).padStart(2, '0')}:00`;
 });
 
+// Guarda a disponibilidade atual e lê o espaço opcional recebido pela URL.
 let currentReservations = [];
 const requestedRoomId = new URLSearchParams(window.location.search).get('room');
 let selectedRoomId = rooms.some((room) => room.id === requestedRoomId)
@@ -25,6 +27,7 @@ let selectedRoomId = rooms.some((room) => room.id === requestedRoomId)
   : rooms[0]?.id || '';
 let requestNumber = 0;
 
+// Formata uma data local como YYYY-MM-DD sem conversão de fuso horário.
 function localDateString(date = new Date()) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -32,6 +35,7 @@ function localDateString(date = new Date()) {
   return `${year}-${month}-${day}`;
 }
 
+// Codifica texto dinâmico antes de inseri-lo em marcação HTML.
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (character) => ({
     '&': '&amp;',
@@ -42,10 +46,12 @@ function escapeHtml(value) {
   })[character]);
 }
 
+// Verifica se dois períodos de reserva se sobrepõem.
 function reservationOverlaps(start, end, reservation) {
   return start < reservation.end && end > reservation.start;
 }
 
+// Lê do navegador as reservas usadas somente no modo de demonstração.
 function loadDemoReservations(date) {
   try {
     const saved = JSON.parse(localStorage.getItem('anhanguera-demo-reservations') || '[]');
@@ -56,17 +62,20 @@ function loadDemoReservations(date) {
   }
 }
 
+// Exibe uma mensagem de status com o tipo visual informado.
 function showMessage(element, message, type) {
   element.textContent = message;
   element.className = `message message--${type}`;
   element.hidden = false;
 }
 
+// Oculta uma mensagem e limpa seu conteúdo anterior.
 function hideMessage(element) {
   element.hidden = true;
   element.textContent = '';
 }
 
+// Consulta a planilha por JSONP e encerra a requisição em caso de erro ou timeout.
 function jsonp(url, date, timeout = 12000) {
   return new Promise((resolve, reject) => {
     const callbackName = `reservationCallback${Date.now()}${Math.floor(Math.random() * 10000)}`;
@@ -91,12 +100,14 @@ function jsonp(url, date, timeout = 12000) {
   });
 }
 
+// Usa armazenamento local no modo de demonstração ou consulta o Apps Script.
 async function getReservations(date) {
   if (demoMode) return loadDemoReservations(date);
   const result = await jsonp(config.googleSheetsUrl, date);
   return result.reservations;
 }
 
+// Monta os cartões de espaços e conecta seus botões à seleção do ambiente.
 function renderRoomCards() {
   roomCards.innerHTML = rooms.map((room) => `
     <article class="room-card${room.id === selectedRoomId ? ' is-selected' : ''}">
@@ -116,6 +127,7 @@ function renderRoomCards() {
   });
 }
 
+// Preenche o seletor de espaços com a configuração disponível.
 function fillRoomSelect() {
   roomSelect.innerHTML = rooms.map((room) =>
     `<option value="${escapeHtml(room.id)}">${escapeHtml(room.name)}</option>`
@@ -123,12 +135,14 @@ function fillRoomSelect() {
   roomSelect.value = selectedRoomId;
 }
 
+// Informa se o período escolhido conflita com uma reserva do espaço ativo.
 function isTimeUnavailable(start, end) {
   return currentReservations.some((reservation) =>
     reservation.roomId === selectedRoomId && reservationOverlaps(start, end, reservation)
   );
 }
 
+// Atualiza a grade de horários e as opções válidas de início.
 function renderAvailability() {
   const roomReservations = currentReservations.filter((reservation) => reservation.roomId === selectedRoomId);
   availability.innerHTML = timeSlots.slice(0, -1).map((start, index) => {
@@ -153,6 +167,7 @@ function renderAvailability() {
   updateEndTimes();
 }
 
+// Limita as opções de término aos períodos posteriores ainda disponíveis.
 function updateEndTimes() {
   const startIndex = timeSlots.indexOf(startSelect.value);
   if (startIndex < 0) {
@@ -172,6 +187,7 @@ function updateEndTimes() {
   if (availableEnds.includes(previousEnd)) endSelect.value = previousEnd;
 }
 
+// Recarrega disponibilidade e ignora respostas antigas de consultas anteriores.
 async function refreshAvailability() {
   const currentRequest = ++requestNumber;
   const requestedDate = dateInput.value;
@@ -206,6 +222,7 @@ async function refreshAvailability() {
   }
 }
 
+// Atualiza o espaço selecionado e, quando solicitado, leva ao formulário.
 function selectRoom(roomId, scrollToForm) {
   if (!rooms.some((room) => room.id === roomId)) return;
   selectedRoomId = roomId;
@@ -217,6 +234,7 @@ function selectRoom(roomId, scrollToForm) {
   }
 }
 
+// Valida localmente os campos temporais antes de enviar uma reserva.
 function validateSubmission(formData) {
   const start = formData.get('start');
   const end = formData.get('end');
@@ -231,6 +249,7 @@ function validateSubmission(formData) {
   }
 }
 
+// Envia a solicitação ao Apps Script e aguarda confirmação pelo iframe.
 function postReservation(payload) {
   return new Promise((resolve, reject) => {
     const nonce = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -255,6 +274,7 @@ function postReservation(payload) {
 }
 
 reservationForm.addEventListener('submit', async (event) => {
+  // Intercepta o envio para validar, registrar e atualizar a disponibilidade.
   event.preventDefault();
   hideMessage(formMessage);
   const formData = new FormData(reservationForm);
@@ -303,6 +323,7 @@ roomSelect.addEventListener('change', () => selectRoom(roomSelect.value, false))
 dateInput.addEventListener('change', refreshAvailability);
 startSelect.addEventListener('change', updateEndTimes);
 
+// Inicializa os controles e consulta os horários da data atual.
 dateInput.min = localDateString();
 dateInput.value = localDateString();
 fillRoomSelect();

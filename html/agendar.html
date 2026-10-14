@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <!-- A base mantém recursos e links relativos à raiz do projeto. -->
   <meta charset="UTF-8">
+  <base href="../">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Consulte horários e solicite a reserva de laboratórios da Faculdade Anhanguera.">
   <meta name="theme-color" content="#20242b">
@@ -17,17 +19,19 @@
   <script src="scripts/script.js" defer></script>
 </head>
 <body>
+  <!-- Cabeçalho de navegação da página de reservas. -->
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="index.html" aria-label="Faculdade Anhanguera - página inicial">
         <span class="brand-mark" aria-hidden="true"><i class="fa-solid fa-building-columns"></i></span>
-        <span>FACULDADE ANHANGUERA<small>Reserva de laboratórios e espaços</small></span>
+        <span>FACULDADE ANHANGUERA<span class="brand-subtitle">Reserva de laboratórios e espaços</span></span>
       </a>
       <a class="header-link" href="index.html">Voltar ao início</a>
     </div>
   </header>
 
+  <!-- Espaços, disponibilidade e formulário de solicitação. -->
   <main id="conteudo">
     <section class="section" id="espacos" aria-labelledby="rooms-title">
       <div class="container">
@@ -106,6 +110,7 @@
     </section>
   </main>
 
+  <!-- Rodapé e controles de acessibilidade compartilhados. -->
   <footer class="site-footer">
     <div class="container">
       <p>Faculdade Anhanguera · Sistema de Reserva de Laboratórios e Espaços · <a href="index.html">Página inicial</a></p>
@@ -132,10 +137,11 @@
   </div>
 
   <a class="btn-whatsapp" href="https://api.whatsapp.com/send?phone=5561985565339&amp;text=Ol%C3%A1%2C%20gostaria%20de%20falar%20sobre%20a%20reserva%20de%20um%20espa%C3%A7o." target="_blank" rel="noopener noreferrer" aria-label="Falar com o responsável pelo WhatsApp">
-    <img src="assets/whatssapp.svg" alt="">
+    <img src="img/whatssapp.svg" alt="">
     <span class="whatsapp-tooltip">Falar com o responsável</span>
   </a>
 
+  <!-- Formulário e iframe ocultos para enviar a solicitação ao Apps Script. -->
   <form id="booking-form" method="post" target="booking-frame" hidden>
     <input type="hidden" name="payload">
   </form>

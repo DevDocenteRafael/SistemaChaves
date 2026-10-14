@@ -1,3 +1,4 @@
+// Nome da aba e colunas usadas para armazenar as solicitações de reserva.
 const SHEET_NAME = 'Reservas';
 const HEADERS = [
   'Registrada em',
@@ -12,6 +13,7 @@ const HEADERS = [
   'Finalidade',
 ];
 
+// Retorna as reservas de uma data por JSONP para permitir a consulta no site.
 function doGet(event) {
   const parameters = event && event.parameter ? event.parameter : {};
   const callback = parameters.callback || '';
@@ -37,6 +39,7 @@ function doGet(event) {
   }
 }
 
+// Valida e registra a reserva sob bloqueio para impedir conflitos simultâneos.
 function doPost(event) {
   let nonce = '';
   try {
@@ -81,6 +84,7 @@ function doPost(event) {
   }
 }
 
+// Confere campos obrigatórios, limites e regras de data e horário.
 function validatePayload_(payload) {
   const requiredFields = ['professor', 'discipline', 'course', 'roomId', 'roomName', 'date', 'start', 'end', 'purpose'];
   if (!requiredFields.every((field) => typeof payload[field] === 'string' && payload[field].trim())) {
@@ -105,11 +109,13 @@ function validatePayload_(payload) {
   }
 }
 
+// Evita que textos iniciados por operadores sejam interpretados como fórmulas.
 function safeTextCell_(value) {
   const text = value.trim();
   return /^[=+\-@]/.test(text) ? `'${text}` : text;
 }
 
+// Lê as linhas registradas e converte os campos usados na disponibilidade.
 function readReservations_() {
   const sheet = getReservationsSheet_();
   if (sheet.getLastRow() < 2) return [];
@@ -122,6 +128,7 @@ function readReservations_() {
   })).filter((reservation) => reservation.roomId && reservation.date && reservation.start && reservation.end);
 }
 
+// Obtém a aba de reservas e a prepara quando ainda não existe.
 function getReservationsSheet_() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   if (!spreadsheet) throw new Error('Vincule o Apps Script a uma planilha do Google.');
@@ -134,12 +141,14 @@ function getReservationsSheet_() {
   return sheet;
 }
 
+// Serializa a resposta de consulta no formato JSONP esperado pelo navegador.
 function jsonp_(callback, result) {
   const json = JSON.stringify(result).replace(/</g, '\\u003c');
   return ContentService.createTextOutput(`${callback}(${json});`)
     .setMimeType(ContentService.MimeType.JAVASCRIPT);
 }
 
+// Devolve ao formulário uma confirmação legível dentro do iframe oculto.
 function postResult_(nonce, ok, error) {
   const result = JSON.stringify({ type: 'reservation-result', nonce, ok, error }).replace(/</g, '\\u003c');
   const html = `<script>window.parent.postMessage(${result}, '*');</script>`;

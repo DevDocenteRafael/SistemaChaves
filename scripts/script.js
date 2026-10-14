@@ -23,7 +23,7 @@ function applyTheme(theme) {
   themeMeta?.setAttribute('content', isLight ? '#ffffff' : '#06121e');
   // Troca os logotipos para manter contraste nos dois temas.
   document.querySelectorAll('.header-logo img, .footer img').forEach((logo) => {
-    logo.src = isLight ? 'assets/logo-black.svg' : 'assets/logo.svg';
+    logo.src = isLight ? 'img/logo-black.svg' : 'img/logo.svg';
   });
 }
 

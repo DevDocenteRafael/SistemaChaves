@@ -6,7 +6,7 @@ Aplicação responsiva para consultar a disponibilidade e solicitar reservas de 
 
 ## Executar localmente
 
-Abra o `index.html` ou use a extensão Live Server no Visual Studio Code. A página inicial mantém a estrutura visual da Barbearia publicada, com apresentação do sistema e fotos dos espaços. O botão **Agendar sala** leva a `agendar.html`, onde são consultados os horários e preenchida a solicitação. Sem configurar a integração, as reservas ficam somente no armazenamento local do navegador e não são compartilhadas com outras pessoas.
+Abra o `index.html` ou use a extensão Live Server no Visual Studio Code. A página inicial mantém a estrutura visual da Barbearia publicada, com apresentação do sistema e fotos dos espaços. O botão **Agendar sala** leva a `html/agendar.html`, onde são consultados os horários e preenchida a solicitação. Sem configurar a integração, as reservas ficam somente no armazenamento local do navegador e não são compartilhadas com outras pessoas.
 
 ## Conectar ao Google Sheets
 
@@ -23,13 +23,13 @@ Se a conta não oferecer acesso restrito à organização e a implantação prec
 
 ## Alterar as imagens
 
-As fotos aparecem nos cartões da página inicial e na página de agendamento. Estão definidas na lista `rooms` em `scripts/config.js`. Para trocar somente as imagens, substitua os arquivos correspondentes em `assets/`, preservando os nomes já usados:
+As fotos aparecem nos cartões da página inicial e na página de agendamento. Estão definidas na lista `rooms` em `scripts/config.js`. Para trocar somente as imagens, substitua os arquivos correspondentes em `img/`, preservando os nomes já usados:
 
-- `assets/corte1.png`
-- `assets/corte2.png`
-- `assets/corte3.png`
+- `img/corte1.png`
+- `img/corte2.png`
+- `img/corte3.png`
 
-As imagens atuais são somente arquivos reaproveitados do projeto-base e devem ser substituídas pelas imagens dos espaços. Também é possível editar apenas os valores `image` da lista para apontar para arquivos novos dentro de `assets/`. Os textos alternativos correspondentes estão no campo `imageAlt`.
+As imagens atuais são somente arquivos reaproveitados do projeto-base e devem ser substituídas pelas imagens dos espaços. Também é possível editar apenas os valores `image` da lista para apontar para arquivos novos dentro de `img/`. Os textos alternativos correspondentes estão no campo `imageAlt`.
 
 ## Personalizar os espaços
 
@@ -40,7 +40,9 @@ O sistema permite agendamentos das 08h às 22h, em horários de uma hora. A disp
 ## Estrutura
 
 ```text
-├── assets/                   # Imagens dos espaços
+├── img/                      # Imagens dos espaços
+├── html/
+│   └── agendar.html          # Consulta de horários e formulário de reserva
 ├── integracao/
 │   └── Code.gs               # Validação e integração com Google Sheets
 ├── scripts/
@@ -54,7 +56,7 @@ O sistema permite agendamentos das 08h às 22h, em horários de uma hora. A disp
 │   ├── reservas.css          # Layout da aplicação de reservas
 │   └── style.css             # Estilos originais da página Barbearia
 ├── index.html                # Apresentação do sistema no layout original
-└── agendar.html              # Consulta de horários e formulário de reserva
+└── readme.md                 # Documentação do projeto
 ```
 
 ## Publicar no GitHub Pages
