@@ -57,4 +57,6 @@ O sistema permite agendamentos das 08h às 22h, em horários de uma hora. A disp
 
 ## Publicar no GitHub Pages
 
-Publique a pasta do projeto no repositório e habilite GitHub Pages para a branch e pasta desejadas. Configure primeiro a integração com a planilha e faça o teste do formulário na URL publicada, pois o acesso local e a implantação do GitHub Pages são origens diferentes.
+O projeto está publicado em [https://devdocenterafael.github.io/SistemaChaves/](https://devdocenterafael.github.io/SistemaChaves/). O GitHub Pages usa a branch `main` e a pasta raiz do repositório.
+
+Configure primeiro a integração com a planilha e teste a consulta e o envio de reservas na página publicada, pois o acesso local e a implantação do GitHub Pages são origens diferentes.
