@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Consulte horários e solicite a reserva de laboratórios da Faculdade Anhanguera.">
+  <meta name="theme-color" content="#20242b">
+  <title>Agendar Sala | Faculdade Anhanguera</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="styles/accessibilidade.css">
+  <link rel="stylesheet" href="styles/reservas.css">
+  <script src="scripts/config.js" defer></script>
+  <script src="scripts/reservas.js" defer></script>
+  <script src="scripts/script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Faculdade Anhanguera - página inicial">
+        <span class="brand-mark" aria-hidden="true"><i class="fa-solid fa-building-columns"></i></span>
+        <span>FACULDADE ANHANGUERA<small>Reserva de laboratórios e espaços</small></span>
+      </a>
+      <a class="header-link" href="index.html">Voltar ao início</a>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <section class="section" id="espacos" aria-labelledby="rooms-title">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Ambientes disponíveis</p>
+          <h2 id="rooms-title">Escolha um espaço</h2>
+          <p>Escolha o ambiente e consulte a disponibilidade para a data desejada.</p>
+        </div>
+        <div class="room-grid" id="room-cards" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="section reservation-section" id="reservation" aria-labelledby="reservation-title">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Disponibilidade e solicitação</p>
+          <h2 id="reservation-title">Consulte e solicite sua reserva</h2>
+          <p>Os horários reservados são sinalizados. Escolha um período disponível e preencha os dados da atividade.</p>
+        </div>
+
+        <div id="service-message" class="message" role="status" hidden></div>
+
+        <div class="reservation-layout">
+          <section class="availability-panel" aria-labelledby="availability-title">
+            <h3 id="availability-title">Horários do espaço</h3>
+            <div class="field">
+              <label for="room">Laboratório ou espaço</label>
+              <select id="room" name="room" form="reservation-form" required></select>
+            </div>
+            <div class="field">
+              <label for="reservation-date">Data da reserva</label>
+              <input id="reservation-date" name="date" type="date" form="reservation-form" required>
+            </div>
+            <div class="time-slots" id="availability" aria-live="polite" aria-label="Disponibilidade das 08 às 22 horas"></div>
+            <div class="availability-legend" aria-label="Legenda dos horários">
+              <span class="legend-item"><span class="legend-swatch" aria-hidden="true"></span>Disponível</span>
+              <span class="legend-item"><span class="legend-swatch legend-swatch--reserved" aria-hidden="true"></span>Reservado</span>
+            </div>
+          </section>
+
+          <section class="reservation-panel" aria-labelledby="form-title">
+            <h3 id="form-title">Dados da solicitação</h3>
+            <div id="form-message" class="message" role="status" aria-live="polite" hidden></div>
+            <form id="reservation-form">
+              <div class="form-grid">
+                <div class="field field--full">
+                  <label for="professor">Nome completo do professor *</label>
+                  <input id="professor" name="professor" type="text" autocomplete="name" maxlength="160" required>
+                </div>
+                <div class="field">
+                  <label for="discipline">Disciplina *</label>
+                  <input id="discipline" name="discipline" type="text" maxlength="120" required>
+                </div>
+                <div class="field">
+                  <label for="course">Curso ou turma *</label>
+                  <input id="course" name="course" type="text" maxlength="120" required>
+                </div>
+                <div class="field">
+                  <label for="start-time">Horário de início *</label>
+                  <select id="start-time" name="start" form="reservation-form" required></select>
+                </div>
+                <div class="field">
+                  <label for="end-time">Horário de término *</label>
+                  <select id="end-time" name="end" form="reservation-form" required></select>
+                </div>
+                <div class="field field--full">
+                  <label for="purpose">Finalidade da utilização *</label>
+                  <textarea id="purpose" name="purpose" maxlength="1000" required></textarea>
+                </div>
+              </div>
+              <button class="button" id="submit-reservation" type="submit">Solicitar reserva</button>
+            </form>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Faculdade Anhanguera · Sistema de Reserva de Laboratórios e Espaços · <a href="index.html">Página inicial</a></p>
+    </div>
+  </footer>
+
+  <div class="accessibility-widget">
+    <button class="accessibility-trigger" type="button" aria-label="Abrir opções de acessibilidade" aria-expanded="false" aria-controls="accessibility-panel" title="Arraste para mover; clique para abrir opções">
+      <i class="fa-solid fa-universal-access" aria-hidden="true"></i>
+    </button>
+    <div class="accessibility-panel" id="accessibility-panel" role="group" aria-label="Preferências de acessibilidade" hidden>
+      <p class="accessibility-panel-title">Acessibilidade</p>
+      <button class="theme-toggle" type="button" aria-label="Ativar modo escuro" aria-pressed="false">
+        <i class="fa-solid fa-moon" aria-hidden="true"></i><span>Modo escuro</span>
+      </button>
+      <div class="font-controls" role="group" aria-label="Tamanho da fonte">
+        <button class="font-control" type="button" data-font-action="decrease" aria-label="Diminuir tamanho da fonte">A−</button>
+        <button class="font-control" type="button" data-font-action="reset" aria-label="Restaurar tamanho padrão da fonte">A</button>
+        <button class="font-control" type="button" data-font-action="increase" aria-label="Aumentar tamanho da fonte">A+</button>
+      </div>
+      <span id="font-status" class="sr-only" aria-live="polite" aria-atomic="true"></span>
+      <span class="drag-hint">Arraste o botão redondo para mover</span>
+    </div>
+  </div>
+
+  <a class="btn-whatsapp" href="https://api.whatsapp.com/send?phone=5561985565339&amp;text=Ol%C3%A1%2C%20gostaria%20de%20falar%20sobre%20a%20reserva%20de%20um%20espa%C3%A7o." target="_blank" rel="noopener noreferrer" aria-label="Falar com o responsável pelo WhatsApp">
+    <img src="assets/whatssapp.svg" alt="">
+    <span class="whatsapp-tooltip">Falar com o responsável</span>
+  </a>
+
+  <form id="booking-form" method="post" target="booking-frame" hidden>
+    <input type="hidden" name="payload">
+  </form>
+  <iframe id="booking-frame" name="booking-frame" title="Retorno do registro da reserva" hidden></iframe>
+</body>
+</html>

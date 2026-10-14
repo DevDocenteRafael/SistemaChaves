@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conheça o Sistema de Reserva de Laboratórios e Espaços da Faculdade Anhanguera.">
+  <meta name="theme-color" content="#06121e">
+
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="styles/accessibilidade.css">
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/home.css">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+  <script src="scripts/config.js" defer></script>
+  <script src="scripts/inicio.js" defer></script>
+  <script src="scripts/script.js" defer></script>
+
+  <title>Faculdade Anhanguera | Reserva de Espaços</title>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <div class="bg-home">
+    <header>
+      <nav class="header-content container" aria-label="Navegação principal">
+        <div class="header-icons">
+          <a href="#sobre" aria-label="Sobre o sistema">
+            <i class="fa-brands fa-instagram fa-2x" aria-hidden="true"></i>
+          </a>
+          <a href="#salas" aria-label="Conheça os espaços">
+            <i class="fa-brands fa-facebook fa-2x" aria-hidden="true"></i>
+          </a>
+          <a href="#contato" aria-label="Contato">
+            <i class="fa-brands fa-tiktok fa-2x" aria-hidden="true"></i>
+          </a>
+        </div>
+
+        <div class="header-logo" data-aos="fade-up" data-aos-delay="300">
+          <img
+            data-aos="flip-up"
+            data-aos-delay="300"
+            data-aos-duration="1500"
+            src="assets/logo.svg"
+            alt="Logo da Faculdade Anhanguera"
+          >
+        </div>
+
+        <div data-aos="fade-down">
+          <a class="header-button" href="agendar.html">Agendar sala</a>
+        </div>
+      </nav>
+
+      <main id="conteudo" class="hero container" data-aos="fade-up" data-aos-delay="400">
+        <h1>RESERVE O ESPAÇO IDEAL PARA SUA AULA.</h1>
+        <p>Conheça os laboratórios e espaços acadêmicos da Faculdade Anhanguera.</p>
+        <a class="button-contact" href="agendar.html">Agendar sala</a>
+      </main>
+    </header>
+  </div>
+
+  <section class="about" id="sobre">
+    <div class="container about-content">
+      <div data-aos="zoom-in" data-aos-delay="100">
+        <img src="assets/images.svg" alt="Ilustração de um ambiente acadêmico">
+      </div>
+
+      <div class="about-description" data-aos="zoom-out-left" data-aos-delay="250">
+        <h2>Sobre o sistema</h2>
+        <p>O sistema facilita a consulta e a solicitação de reservas dos laboratórios e espaços acadêmicos da Faculdade Anhanguera.</p>
+        <p>Os agendamentos podem ser solicitados das <strong>08h às 22h</strong>. Escolha o ambiente, consulte os horários disponíveis e envie os dados da atividade para a equipe responsável.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="services" id="salas">
+    <div class="services-content container">
+      <h2>Espaços disponíveis</h2>
+      <p>Conheça os laboratórios e ambientes da faculdade. Selecione um espaço para consultar horários e iniciar uma solicitação de reserva.</p>
+    </div>
+
+    <div class="haircuts home-room-grid" id="home-room-cards" aria-live="polite"></div>
+  </section>
+
+  <section class="services home-map-heading">
+    <h2>Venha conhecer</h2>
+  </section>
+
+  <iframe
+    class="home-map"
+    title="Mapa da localização da Faculdade Anhanguera"
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3838.426355237055!2d-47.95768032585478!3d-15.83417343481173!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935a3029eaad68b7%3A0xc4985755bc8593cc!2sParkShopping%20Bras%C3%ADlia!5e0!3m2!1spt-BR!2sbr!4v1778171472764!5m2!1spt-BR!2sbr"
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+    allowfullscreen
+  ></iframe>
+
+  <footer class="footer" id="contato">
+    <div class="footer-icons">
+      <a href="#sobre" aria-label="Sobre o sistema"><i class="fa-brands fa-instagram fa-2x" aria-hidden="true"></i></a>
+      <a href="#salas" aria-label="Conheça os espaços"><i class="fa-brands fa-facebook fa-2x" aria-hidden="true"></i></a>
+      <a href="#contato" aria-label="Contato"><i class="fa-brands fa-tiktok fa-2x" aria-hidden="true"></i></a>
+    </div>
+    <div>
+      <img src="assets/logo.svg" alt="Logo da Faculdade Anhanguera">
+    </div>
+    <p>Faculdade Anhanguera · Sistema de Reserva de Laboratórios e Espaços</p>
+  </footer>
+
+  <div class="accessibility-widget">
+    <button class="accessibility-trigger" type="button" aria-label="Abrir opções de acessibilidade" aria-expanded="false" aria-controls="accessibility-panel" title="Arraste para mover; clique para abrir opções">
+      <i class="fa-solid fa-universal-access" aria-hidden="true"></i>
+    </button>
+    <div class="accessibility-panel" id="accessibility-panel" role="group" aria-label="Preferências de acessibilidade" hidden>
+      <p class="accessibility-panel-title">Acessibilidade</p>
+      <button class="theme-toggle" type="button" aria-label="Ativar modo claro" aria-pressed="false">
+        <i class="fa-solid fa-sun" aria-hidden="true"></i><span>Modo claro</span>
+      </button>
+      <div class="font-controls" role="group" aria-label="Tamanho da fonte">
+        <button class="font-control" type="button" data-font-action="decrease" aria-label="Diminuir tamanho da fonte">A−</button>
+        <button class="font-control" type="button" data-font-action="reset" aria-label="Restaurar tamanho padrão da fonte">A</button>
+        <button class="font-control" type="button" data-font-action="increase" aria-label="Aumentar tamanho da fonte">A+</button>
+      </div>
+      <span id="font-status" class="sr-only" aria-live="polite" aria-atomic="true"></span>
+      <span class="drag-hint">Arraste o botão redondo para mover</span>
+    </div>
+  </div>
+
+  <a class="btn-whatsapp" href="https://api.whatsapp.com/send?phone=5561985565339&amp;text=Ol%C3%A1%2C%20gostaria%20de%20falar%20sobre%20a%20reserva%20de%20um%20espa%C3%A7o." target="_blank" rel="noopener noreferrer" aria-label="Falar com o responsável pelo WhatsApp">
+    <img src="assets/whatssapp.svg" alt="">
+    <span class="tooltip-text">Falar com o responsável</span>
+  </a>
+</body>
+</html>
