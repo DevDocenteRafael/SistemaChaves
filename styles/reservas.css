@@ -37,6 +37,7 @@ button:disabled { cursor: not-allowed; opacity: .58; }
 .brand span:last-child { display: grid; line-height: 1.2; }
 .brand-subtitle { margin-top: 4px; color: #d5d8dd; font-size: .72rem; font-weight: 400; }
 .header-link { padding: 9px 16px; border: 1px solid #fff; border-radius: 6px; color: #fff; text-decoration: none; font-weight: 600; }
+.header-link-short { display: none; }
 .header-link:hover { background: #fff; color: #20242b; }
 
 .hero { position: relative; overflow: hidden; padding: clamp(56px, 9vw, 112px) 0; background: #343b46; color: #fff; }
@@ -159,9 +160,12 @@ button:disabled { cursor: not-allowed; opacity: .58; }
 @media (max-width: 540px) {
   .container { width: min(100% - 28px, 1120px); }
   .header-inner { min-height: 68px; gap: 10px; }
-  .header-link { padding: 8px 10px; font-size: .84rem; }
-  .brand { gap: 8px; font-size: .86rem; }
+  .header-link { flex: 0 0 auto; padding: 8px 10px; font-size: .84rem; white-space: nowrap; }
+  .header-link-full { display: none; }
+  .header-link-short { display: inline; }
+  .brand { min-width: 0; gap: 8px; font-size: .86rem; }
   .brand-mark { width: 36px; height: 36px; }
+  .brand span:last-child { min-width: 0; }
   .brand-subtitle { font-size: .64rem; }
   .room-grid { grid-template-columns: 1fr; }
   .home-booking-cta, .home-contact__inner { align-items: flex-start; flex-direction: column; }
