@@ -1,17 +1,26 @@
-// Nome da aba e colunas usadas para armazenar as solicitações de reserva.
-const SHEET_NAME = 'Reservas';
-const HEADERS = [
-  'Registrada em',
-  'Professor',
-  'Disciplina',
-  'Curso ou turma',
-  'ID do espaço',
-  'Espaço',
-  'Data',
-  'Início',
-  'Término',
-  'Finalidade',
-];
+function doPost(e) {
+  try {
+    var dados = JSON.parse(e.postData.contents);
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Reservas"); // Substitua pelo nome exato da aba na planilha
+    
+    // Adiciona os dados na planilha
+    sheet.appendRow([
+      dados.professor, 
+      dados.sala, 
+      dados.data, 
+      dados.inicio, 
+      dados.fim, 
+      dados.disciplina,
+      dados.curso
+    ]);
+    
+    return ContentService.createTextOutput(JSON.stringify({status: "success", message: "Reserva salva com sucesso!" }))
+                         .setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({status: "error", message: error.toString()}))
+                         .setMimeType(ContentService.MimeType.JSON);
+  }
+}
 
 // Retorna as reservas de uma data por JSONP para permitir a consulta no site.
 function doGet(event) {

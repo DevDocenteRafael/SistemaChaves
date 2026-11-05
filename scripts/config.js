@@ -1,6 +1,6 @@
 window.RESERVAS_CONFIG = {
   // Configuração da integração; deixe vazio para usar o modo de demonstração local.
-  googleSheetsUrl: '',
+  googleSheetsUrl: 'https://script.google.com/macros/s/AKfycbx-BMt7oB7Vx85l-moPZJgkax6Vu3H_29jhzy4FWkY16yFWBWcOxWcdyqfBpxROJYWHUA/exec',
   // Espaços disponíveis, com identificador, descrição e imagem de cada cartão.
   rooms: [
     {
