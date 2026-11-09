@@ -148,19 +148,21 @@ function renderAvailability() {
   availability.innerHTML = timeSlots.slice(0, -1).map((start, index) => {
     const end = timeSlots[index + 1];
     const reserved = roomReservations.some((reservation) => reservationOverlaps(start, end, reservation));
-    const selected = startSelect.value === start;
-    const classes = ['time-slot', reserved && 'time-slot--reserved', selected && 'time-slot--selected'].filter(Boolean).join(' ');
-    return reserved
+    const selectedStart = startSelect.value === start;
+    const selectedEnd = endSelect.value === start;
+    const validEnd = startSelect.value && start > startSelect.value && !isTimeUnavailable(startSelect.value, start);
+    const classes = ['time-slot', reserved && 'time-slot--reserved', (selectedStart || selectedEnd) && 'time-slot--selected'].filter(Boolean).join(' ');
+    return reserved && !selectedEnd && !validEnd
       ? `<span class="${classes}" aria-label="${start}, horário reservado">
-      ${start}${reserved ? '<small>Reservado</small>' : '<small>Disponível</small>'}
+      ${start}<small>Reservado</small>
     </span>`
-      : `<button class="${classes}" type="button" data-time-slot="${start}" aria-pressed="${selected}">
-      ${start}<small>${selected ? 'Início selecionado' : 'Disponível'}</small>
+      : `<button class="${classes}" type="button" data-time-slot="${start}" aria-pressed="${selectedStart || selectedEnd}">
+      ${start}<small>${selectedStart ? 'Início selecionado' : selectedEnd ? 'Término selecionado' : reserved ? 'Término disponível' : 'Disponível'}</small>
     </button>`;
   }).join('');
 
   const previousStart = startSelect.value;
-  startSelect.innerHTML = timeSlots.slice(0, -1).map((start, index) => {
+  startSelect.innerHTML = '<option value="">Selecione o início</option>' + timeSlots.slice(0, -1).map((start, index) => {
     const end = timeSlots[index + 1];
     const disabled = isTimeUnavailable(start, end);
     return `<option value="${start}" ${disabled ? 'disabled' : ''}>${start}${disabled ? ' — indisponível' : ''}</option>`;
@@ -175,11 +177,21 @@ function renderAvailability() {
   availability.querySelectorAll('[data-time-slot]').forEach((button) => {
     button.addEventListener('click', () => {
       const start = button.dataset.timeSlot;
-      const startIndex = timeSlots.indexOf(start);
-      startSelect.value = start;
-      updateEndTimes();
-      endSelect.value = timeSlots[startIndex + 1];
-      updateEndTimes();
+      if (startSelect.value === start) {
+        startSelect.value = '';
+        updateEndTimes();
+      } else if (endSelect.value === start) {
+        endSelect.value = '';
+      } else if (!startSelect.value || start < startSelect.value) {
+        startSelect.value = start;
+        updateEndTimes();
+      } else if (start > startSelect.value && !isTimeUnavailable(startSelect.value, start)) {
+        endSelect.value = start;
+      } else {
+        showMessage(formMessage, 'Esse término inclui um horário reservado. Escolha outro horário.', 'error');
+        return;
+      }
+      hideMessage(formMessage);
       renderAvailability();
     });
   });
@@ -199,7 +211,7 @@ function updateEndTimes() {
     !isTimeUnavailable(startSelect.value, end)
   );
   endSelect.disabled = availableEnds.length === 0;
-  endSelect.innerHTML = availableEnds.map((end) =>
+  endSelect.innerHTML = '<option value="">Selecione o término</option>' + availableEnds.map((end) =>
     `<option value="${end}">${end}</option>`
   ).join('');
   if (availableEnds.includes(previousEnd)) endSelect.value = previousEnd;
@@ -344,7 +356,12 @@ reservationForm.addEventListener('submit', async (event) => {
 
 roomSelect.addEventListener('change', () => selectRoom(roomSelect.value, false));
 dateInput.addEventListener('change', refreshAvailability);
-startSelect.addEventListener('change', updateEndTimes);
+startSelect.addEventListener('change', () => {
+  endSelect.value = '';
+  updateEndTimes();
+  renderAvailability();
+});
+endSelect.addEventListener('change', renderAvailability);
 
 // Inicializa os controles e consulta os horários da data atual.
 dateInput.min = localDateString();
