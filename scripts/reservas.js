@@ -148,9 +148,15 @@ function renderAvailability() {
   availability.innerHTML = timeSlots.slice(0, -1).map((start, index) => {
     const end = timeSlots[index + 1];
     const reserved = roomReservations.some((reservation) => reservationOverlaps(start, end, reservation));
-    return `<span class="time-slot${reserved ? ' time-slot--reserved' : ''}"${reserved ? ' aria-label="Horário reservado"' : ''}>
+    const selected = startSelect.value === start;
+    const classes = ['time-slot', reserved && 'time-slot--reserved', selected && 'time-slot--selected'].filter(Boolean).join(' ');
+    return reserved
+      ? `<span class="${classes}" aria-label="${start}, horário reservado">
       ${start}${reserved ? '<small>Reservado</small>' : '<small>Disponível</small>'}
-    </span>`;
+    </span>`
+      : `<button class="${classes}" type="button" data-time-slot="${start}" aria-pressed="${selected}">
+      ${start}<small>${selected ? 'Início selecionado' : 'Disponível'}</small>
+    </button>`;
   }).join('');
 
   const previousStart = startSelect.value;
@@ -165,6 +171,18 @@ function renderAvailability() {
     startSelect.value = previousStart;
   }
   updateEndTimes();
+
+  availability.querySelectorAll('[data-time-slot]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const start = button.dataset.timeSlot;
+      const startIndex = timeSlots.indexOf(start);
+      startSelect.value = start;
+      updateEndTimes();
+      endSelect.value = timeSlots[startIndex + 1];
+      updateEndTimes();
+      renderAvailability();
+    });
+  });
 }
 
 // Limita as opções de término aos períodos posteriores ainda disponíveis.

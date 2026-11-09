@@ -87,8 +87,12 @@ button:disabled { cursor: not-allowed; opacity: .58; }
 .field label { font-size: .9rem; font-weight: 600; }
 .field input, .field select, .field textarea { width: 100%; min-height: 44px; padding: 9px 11px; border: 1px solid #aeb7c1; border-radius: 6px; background: #fff; color: #1f2933; }
 .field textarea { min-height: 100px; resize: vertical; }
+.availability-hint { margin: 0 0 10px; color: var(--muted); font-size: .82rem; }
 .time-slots { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
-.time-slot { display: grid; min-height: 56px; place-content: center; border: 1px solid #9dc8ad; border-radius: 6px; background: #eff8f1; color: #175d30; text-align: center; font-size: .88rem; font-weight: 600; }
+.time-slot { display: grid; min-height: 56px; place-content: center; padding: 4px; border: 1px solid #9dc8ad; border-radius: 6px; background: #eff8f1; color: #175d30; text-align: center; font-size: .88rem; font-weight: 600; }
+button.time-slot { cursor: pointer; }
+button.time-slot:hover { border-color: #175d30; box-shadow: 0 0 0 2px rgba(23, 93, 48, .16); }
+.time-slot--selected { border-color: var(--brand); background: #fff1f2; color: var(--brand-dark); box-shadow: 0 0 0 2px rgba(189, 30, 45, .16); }
 .time-slot small { font-size: .68rem; font-weight: 400; }
 .time-slot--reserved { border-color: #e2a1a6; background: #fff1f2; color: #8f1420; }
 .availability-legend { display: flex; flex-wrap: wrap; gap: 12px 20px; margin-top: 14px; color: var(--muted); font-size: .82rem; }
