@@ -188,11 +188,11 @@ function updateEndTimes() {
 }
 
 // Recarrega disponibilidade e ignora respostas antigas de consultas anteriores.
-async function refreshAvailability() {
+async function refreshAvailability(preserveFormMessage = false) {
   const currentRequest = ++requestNumber;
   const requestedDate = dateInput.value;
   const requestedRoomId = selectedRoomId;
-  hideMessage(formMessage);
+  if (!preserveFormMessage) hideMessage(formMessage);
   availability.innerHTML = '<p class="availability-loading">Consultando disponibilidade...</p>';
   startSelect.disabled = true;
   endSelect.disabled = true;
@@ -310,12 +310,12 @@ reservationForm.addEventListener('submit', async (event) => {
 
     showMessage(formMessage, demoMode
       ? 'Reserva de demonstração adicionada neste navegador. Ela não foi enviada à Faculdade.'
-      : 'Reserva feita com sucesso',
+      : 'Reserva feita com sucesso!',
     demoMode ? 'warning' : 'success');
     reservationForm.reset();
     dateInput.value = payload.date;
     roomSelect.value = selectedRoomId;
-    await refreshAvailability();
+    await refreshAvailability(true);
   } catch (error) {
     showMessage(formMessage, error.message || 'Revise os dados e tente novamente.', 'error');
   } finally {
