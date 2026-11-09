@@ -105,6 +105,11 @@ window.addEventListener('resize', () => {
   placeAccessibilityPanel();
 });
 
+window.addEventListener('load', () => {
+  if (!savedWidgetPosition) positionAccessibilityWidget();
+  placeAccessibilityPanel();
+}, { once: true });
+
 // Abre ou fecha o painel quando o botão redondo é clicado.
 accessibilityTrigger.addEventListener('click', () => {
   // Ignora o clique sintético que o navegador gera ao terminar um arraste.
