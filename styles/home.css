@@ -1,4 +1,30 @@
 /* Ajustes dos cartões de espaços na página inicial. */
+.bg-home > header {
+  padding-top: 78px;
+}
+
+.bg-home .header-content {
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  width: 100%;
+  max-width: none;
+  min-height: 78px;
+  padding: 8px max(20px, calc((100% - 1120px) / 2));
+  background: rgba(6, 18, 30, .94);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .2);
+  backdrop-filter: blur(10px);
+}
+
+.bg-home .header-logo {
+  margin-top: 0;
+}
+
+.bg-home .header-logo img {
+  width: 160px;
+}
+
 .services#salas {
   padding: 54px 14px 0;
   background: #f3f5f7;
@@ -129,6 +155,38 @@
 
 /* Adapta a quantidade de colunas para telas menores. */
 @media screen and (max-width: 768px) {
+  .bg-home > header {
+    padding-top: 64px;
+  }
+
+  .bg-home .header-content {
+    min-height: 64px;
+    flex-direction: row;
+    gap: 8px;
+    padding: 8px 12px;
+  }
+
+  .bg-home .header-content i {
+    margin-top: 0;
+    font-size: 20px;
+  }
+
+  .bg-home .header-icons {
+    gap: 8px;
+  }
+
+  .bg-home .header-logo img {
+    width: 110px;
+    margin-top: 0;
+  }
+
+  .bg-home .header-button {
+    display: inline-block;
+    padding: 7px 10px;
+    font-size: .8rem;
+    white-space: nowrap;
+  }
+
   .home-room-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     padding-inline: 20px;
@@ -140,6 +198,10 @@
 }
 
 @media screen and (max-width: 480px) {
+  .bg-home .header-logo img {
+    width: 96px;
+  }
+
   .home-room-grid {
     grid-template-columns: 1fr;
     gap: 18px;
