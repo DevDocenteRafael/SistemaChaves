@@ -1,26 +1,18 @@
-function doPost(e) {
-  try {
-    var dados = JSON.parse(e.postData.contents);
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Reservas"); // Substitua pelo nome exato da aba na planilha
-    
-    // Adiciona os dados na planilha
-    sheet.appendRow([
-      dados.professor, 
-      dados.sala, 
-      dados.data, 
-      dados.inicio, 
-      dados.fim, 
-      dados.disciplina,
-      dados.curso
-    ]);
-    
-    return ContentService.createTextOutput(JSON.stringify({status: "success", message: "Reserva salva com sucesso!" }))
-                         .setMimeType(ContentService.MimeType.JSON);
-  } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({status: "error", message: error.toString()}))
-                         .setMimeType(ContentService.MimeType.JSON);
-  }
-}
+const SPREADSHEET_ID = '1D1sh78cryjY20Z0fN5f0Z-F9xZtF70xC0fcJgqTbNP4';
+const SHEET_NAME = 'Reservas';
+const HEADERS = [
+  'Data do registro',
+  'Professor',
+  'Disciplina',
+  'Curso ou turma',
+  'Espaço (ID)',
+  'Espaço',
+  'Data da reserva',
+  'Início',
+  'Término',
+  'Finalidade',
+  'Identificador da solicitação',
+];
 
 // Retorna as reservas de uma data por JSONP para permitir a consulta no site.
 function doGet(event) {
@@ -30,6 +22,19 @@ function doGet(event) {
     if (!/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(callback)) {
       throw new Error('Parâmetro de consulta inválido.');
     }
+    if (parameters.action === 'receipt') {
+      const nonce = parameters.nonce || '';
+      if (!/^[A-Za-z0-9-]{1,80}$/.test(nonce)) {
+        throw new Error('Identificador de solicitação inválido.');
+      }
+      const sheet = getReservationsSheet_();
+      const found = sheet.getLastRow() >= 2 &&
+        sheet.getRange(2, HEADERS.length, sheet.getLastRow() - 1, 1)
+          .getDisplayValues()
+          .some(([requestId]) => requestId === nonce);
+      return jsonp_(callback, { found });
+    }
+
     const date = parameters.date || '';
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
       throw new Error('Informe uma data válida.');
@@ -83,6 +88,7 @@ function doPost(event) {
         payload.start,
         payload.end,
         safeTextCell_(payload.purpose),
+        nonce,
       ]);
     } finally {
       lock.releaseLock();
@@ -98,6 +104,9 @@ function validatePayload_(payload) {
   const requiredFields = ['professor', 'discipline', 'course', 'roomId', 'roomName', 'date', 'start', 'end', 'purpose'];
   if (!requiredFields.every((field) => typeof payload[field] === 'string' && payload[field].trim())) {
     throw new Error('Preencha todos os campos obrigatórios.');
+  }
+  if (!/^[A-Za-z0-9-]{1,80}$/.test(payload.nonce || '')) {
+    throw new Error('Identificador de solicitação inválido.');
   }
   const dateParts = payload.date.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   const parsedDate = dateParts
@@ -139,15 +148,28 @@ function readReservations_() {
 
 // Obtém a aba de reservas e a prepara quando ainda não existe.
 function getReservationsSheet_() {
-  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  if (!spreadsheet) throw new Error('Vincule o Apps Script a uma planilha do Google.');
+  const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
   let sheet = spreadsheet.getSheetByName(SHEET_NAME);
   if (!sheet) sheet = spreadsheet.insertSheet(SHEET_NAME);
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(HEADERS);
     sheet.setFrozenRows(1);
+  } else if (sheet.getLastColumn() < HEADERS.length) {
+    sheet.getRange(1, HEADERS.length).setValue(HEADERS[HEADERS.length - 1]);
+  } else if (sheet.getRange(1, HEADERS.length).getValue() !== HEADERS[HEADERS.length - 1]) {
+    throw new Error('A coluna K da aba Reservas precisa se chamar "Identificador da solicitação".');
   }
   return sheet;
+}
+
+// Execute manualmente no editor do Apps Script para remover reservas e manter os cabeçalhos.
+function clearReservationData() {
+  const sheet = getReservationsSheet_();
+  const lastRow = sheet.getLastRow();
+  if (lastRow <= 1) return 0;
+  const rowsDeleted = lastRow - 1;
+  sheet.deleteRows(2, rowsDeleted);
+  return rowsDeleted;
 }
 
 // Serializa a resposta de consulta no formato JSONP esperado pelo navegador.

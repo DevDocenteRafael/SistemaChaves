@@ -76,7 +76,7 @@ function hideMessage(element) {
 }
 
 // Consulta a planilha por JSONP e encerra a requisição em caso de erro ou timeout.
-function jsonp(url, date, timeout = 12000) {
+function jsonp(url, parameters, timeout = 12000) {
   return new Promise((resolve, reject) => {
     const callbackName = `reservationCallback${Date.now()}${Math.floor(Math.random() * 10000)}`;
     const script = document.createElement('script');
@@ -94,8 +94,8 @@ function jsonp(url, date, timeout = 12000) {
       if (result.error) finish(new Error(result.error));
       else finish(null, result);
     };
-    script.onerror = () => finish(new Error('Não foi possível consultar a planilha de reservas.'));
-    script.src = `${url}${url.includes('?') ? '&' : '?'}action=availability&date=${encodeURIComponent(date)}&callback=${callbackName}`;
+    const query = new URLSearchParams({ ...parameters, callback: callbackName });
+    script.src = `${url}${url.includes('?') ? '&' : '?'}${query}`;
     document.head.append(script);
   });
 }
@@ -103,7 +103,7 @@ function jsonp(url, date, timeout = 12000) {
 // Usa armazenamento local no modo de demonstração ou consulta o Apps Script.
 async function getReservations(date) {
   if (demoMode) return loadDemoReservations(date);
-  const result = await jsonp(config.googleSheetsUrl, date);
+  const result = await jsonp(config.googleSheetsUrl, { action: 'availability', date });
   return result.reservations;
 }
 
@@ -249,28 +249,33 @@ function validateSubmission(formData) {
   }
 }
 
-// Envia a solicitação ao Apps Script e aguarda confirmação pelo iframe.
+// Confirma a reserva usando a consulta de disponibilidade compatível com a implantação atual.
+async function waitForReservation(payload) {
+  const deadline = Date.now() + 30000;
+  while (Date.now() < deadline) {
+    const result = await jsonp(
+      config.googleSheetsUrl,
+      { action: 'availability', date: payload.date },
+      Math.min(10000, deadline - Date.now())
+    );
+    const saved = result.reservations.some((reservation) =>
+      reservation.roomId === payload.roomId &&
+      reservation.start === payload.start &&
+      reservation.end === payload.end
+    );
+    if (saved) return;
+    await new Promise((resolve) => window.setTimeout(resolve, 800));
+  }
+  throw new Error('Não foi possível confirmar a reserva na planilha. Atualize a disponibilidade antes de tentar novamente.');
+}
+
+// Envia a solicitação pelo iframe e confirma sua gravação na planilha.
 function postReservation(payload) {
-  return new Promise((resolve, reject) => {
-    const nonce = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-    const timeout = window.setTimeout(() => {
-      window.removeEventListener('message', onResponse);
-      reject(new Error('A planilha não confirmou o recebimento. Verifique a conexão e tente novamente.'));
-    }, 20000);
-
-    function onResponse(event) {
-      if (event.source !== bookingFrame.contentWindow || event.data?.type !== 'reservation-result' || event.data.nonce !== nonce) return;
-      window.clearTimeout(timeout);
-      window.removeEventListener('message', onResponse);
-      if (event.data.ok) resolve();
-      else reject(new Error(event.data.error || 'A reserva não foi registrada.'));
-    }
-
-    window.addEventListener('message', onResponse);
-    bookingForm.action = config.googleSheetsUrl;
-    bookingForm.querySelector('[name="payload"]').value = JSON.stringify({ ...payload, nonce });
-    bookingForm.submit();
-  });
+  const nonce = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  bookingForm.action = config.googleSheetsUrl;
+  bookingForm.querySelector('[name="payload"]').value = JSON.stringify({ ...payload, nonce });
+  bookingForm.submit();
+  return waitForReservation(payload);
 }
 
 reservationForm.addEventListener('submit', async (event) => {
@@ -305,7 +310,7 @@ reservationForm.addEventListener('submit', async (event) => {
 
     showMessage(formMessage, demoMode
       ? 'Reserva de demonstração adicionada neste navegador. Ela não foi enviada à Faculdade.'
-      : 'Reserva registrada com sucesso.',
+      : 'Reserva feita com sucesso',
     demoMode ? 'warning' : 'success');
     reservationForm.reset();
     dateInput.value = payload.date;

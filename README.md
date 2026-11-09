@@ -10,14 +10,17 @@ Abra o `index.html` ou use a extensão Live Server no Visual Studio Code. A pág
 
 ## Conectar ao Google Sheets
 
-1. Crie uma planilha Google e abra **Extensões > Apps Script**.
+1. Abra a [planilha Google configurada no sistema](https://docs.google.com/spreadsheets/d/1D1sh78cryjY20Z0fN5f0Z-F9xZtF70xC0fcJgqTbNP4/edit) e acesse **Extensões > Apps Script**.
 2. Copie o conteúdo de `integracao/Code.gs` para o editor do Apps Script associado à planilha.
-3. Salve o projeto e implante como **App da Web**. O app deve executar como a conta proprietária da planilha. Restrinja o acesso à organização da faculdade, se essa opção estiver disponível.
-4. Copie a URL da implantação e cole em `googleSheetsUrl` no arquivo `scripts/config.js`.
-5. Reimplante ou atualize a implantação após qualquer alteração no Apps Script.
-6. Teste a consulta de disponibilidade e o envio de uma reserva antes de publicar no GitHub Pages.
+3. O Apps Script grava na planilha cujo ID está definido em `SPREADSHEET_ID` e na aba `Reservas`; a conta que implantar precisa ter acesso de edição a essa planilha.
+4. Salve o projeto e implante como **App da Web**. O app deve executar como uma conta com acesso à planilha. Restrinja o acesso à organização da faculdade, se essa opção estiver disponível.
+5. Copie a URL da implantação e cole em `googleSheetsUrl` no arquivo `scripts/config.js`.
+6. Reimplante ou atualize a implantação após qualquer alteração no Apps Script.
+7. Teste a consulta de disponibilidade e o envio de uma reserva antes de publicar no GitHub Pages.
 
-O Apps Script cria a aba `Reservas` e os cabeçalhos automaticamente. A verificação de conflito é feita novamente no Apps Script, sob bloqueio, antes de salvar; assim duas solicitações concorrentes para o mesmo espaço e período não são confirmadas.
+O Apps Script cria a aba `Reservas` e os cabeçalhos automaticamente. A coluna K registra um identificador exclusivo da solicitação. Depois do envio, a página confirma a reserva consultando a disponibilidade da data e verificando se o espaço e o período aparecem como reservados. A verificação de conflito é feita novamente no Apps Script, sob bloqueio, antes de salvar; assim duas solicitações concorrentes para o mesmo espaço e período não são confirmadas.
+
+Para apagar as reservas existentes sem remover os cabeçalhos, abra o editor do Apps Script com uma conta que tenha permissão de edição, selecione `clearReservationData` na lista de funções e clique em **Executar**. Autorize o script se solicitado e depois atualize a implantação do App da Web. A função apaga somente as linhas de dados da aba `Reservas`.
 
 Se a conta não oferecer acesso restrito à organização e a implantação precisar aceitar qualquer pessoa, o endereço do App da Web ficará acessível publicamente. A planilha não deve ser compartilhada publicamente; ainda assim, qualquer pessoa que acesse o site poderá enviar solicitações. Para restringir a reserva a professores autenticados, será necessário acrescentar uma solução de autenticação.
 
