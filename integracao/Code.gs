@@ -3,6 +3,7 @@ const SHEET_NAME = 'Reservas';
 const HEADERS = [
   'Data do registro',
   'Professor',
+  'WhatsApp' , 
   'Disciplina',
   'Curso ou turma',
   'Espaço (ID)',
@@ -80,6 +81,7 @@ function doPost(event) {
       sheet.appendRow([
         new Date(),
         safeTextCell_(payload.professor),
+        safeTextCell_(payload.whatsapp),
         safeTextCell_(payload.discipline),
         safeTextCell_(payload.course),
         payload.roomId,
@@ -101,7 +103,7 @@ function doPost(event) {
 
 // Confere campos obrigatórios, limites e regras de data e horário.
 function validatePayload_(payload) {
-  const requiredFields = ['professor', 'discipline', 'course', 'roomId', 'roomName', 'date', 'start', 'end', 'purpose'];
+  const requiredFields = ['professor', 'whatsapp', 'discipline', 'course', 'roomId', 'roomName', 'date', 'start', 'end', 'purpose'];
   if (!requiredFields.every((field) => typeof payload[field] === 'string' && payload[field].trim())) {
     throw new Error('Preencha todos os campos obrigatórios.');
   }
@@ -122,6 +124,7 @@ function validatePayload_(payload) {
   const today = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
   if (payload.date < today) throw new Error('A data da reserva não pode estar no passado.');
   if (payload.professor.length > 160 || payload.discipline.length > 120 ||
+      payload.discipline.length > 120 ||
       payload.course.length > 120 || payload.purpose.length > 1000) {
     throw new Error('Um ou mais campos excedem o limite de caracteres.');
   }
