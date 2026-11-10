@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <!-- A base mantém recursos e links relativos à raiz do projeto. -->
   <meta charset="UTF-8">
@@ -11,13 +12,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer">
   <link rel="stylesheet" href="styles/accessibilidade.css">
   <link rel="stylesheet" href="styles/reservas.css">
   <script src="scripts/config.js" defer></script>
   <script src="scripts/reservas.js" defer></script>
   <script src="scripts/script.js" defer></script>
 </head>
+
 <body>
   <!-- Cabeçalho de navegação da página de reservas. -->
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -68,11 +72,14 @@
               <label for="reservation-date">Data da reserva</label>
               <input id="reservation-date" name="date" type="date" form="reservation-form" required>
             </div>
-            <p class="availability-hint">Clique em um horário disponível para definir o início e em outro para definir o término. Clique novamente no horário selecionado para desmarcá-lo.</p>
-            <div class="time-slots" id="availability" aria-live="polite" aria-label="Disponibilidade das 08 às 22 horas"></div>
+            <p class="availability-hint">Clique em um horário disponível para definir o início e em outro para definir o
+              término. Clique novamente no horário selecionado para desmarcá-lo.</p>
+            <div class="time-slots" id="availability" aria-live="polite"
+              aria-label="Disponibilidade das 08 às 22 horas"></div>
             <div class="availability-legend" aria-label="Legenda dos horários">
               <span class="legend-item"><span class="legend-swatch" aria-hidden="true"></span>Disponível</span>
-              <span class="legend-item"><span class="legend-swatch legend-swatch--reserved" aria-hidden="true"></span>Reservado</span>
+              <span class="legend-item"><span class="legend-swatch legend-swatch--reserved"
+                  aria-hidden="true"></span>Reservado</span>
             </div>
           </section>
 
@@ -84,6 +91,13 @@
                 <div class="field field--full">
                   <label for="professor">Nome completo do professor *</label>
                   <input id="professor" name="professor" type="text" autocomplete="name" maxlength="160" required>
+                </div>
+
+                <div class="field field--full">
+                  <label for="whatsapp">WhatsApp do professor *</label>
+                  <input id="whatsapp" name="whatsapp" type="tel" autocomplete="tel" inputmode="numeric"
+                    placeholder="(61) 99999-9999" maxlength="15" pattern="\([1-9][0-9]\) 9[0-9]{4}-[0-9]{4}"
+                    title="Digite um número no formato (61) 99999-9999" required>
                 </div>
                 <div class="field">
                   <label for="discipline">Disciplina *</label>
@@ -117,30 +131,38 @@
   <!-- Rodapé e controles de acessibilidade compartilhados. -->
   <footer class="site-footer">
     <div class="container">
-      <p>Faculdade Anhanguera · Sistema de Reserva de Laboratórios e Espaços · <a href="index.html">Página inicial</a></p>
+      <p>Faculdade Anhanguera · Sistema de Reserva de Laboratórios e Espaços · <a href="index.html">Página inicial</a>
+      </p>
     </div>
   </footer>
 
   <div class="accessibility-widget">
-    <button class="accessibility-trigger" type="button" aria-label="Abrir opções de acessibilidade" aria-expanded="false" aria-controls="accessibility-panel" title="Arraste para mover; clique para abrir opções">
+    <button class="accessibility-trigger" type="button" aria-label="Abrir opções de acessibilidade"
+      aria-expanded="false" aria-controls="accessibility-panel" title="Arraste para mover; clique para abrir opções">
       <i class="fa-solid fa-universal-access" aria-hidden="true"></i>
     </button>
-    <div class="accessibility-panel" id="accessibility-panel" role="group" aria-label="Preferências de acessibilidade" hidden>
+    <div class="accessibility-panel" id="accessibility-panel" role="group" aria-label="Preferências de acessibilidade"
+      hidden>
       <p class="accessibility-panel-title">Acessibilidade</p>
       <button class="theme-toggle" type="button" aria-label="Ativar modo escuro" aria-pressed="false">
         <i class="fa-solid fa-moon" aria-hidden="true"></i><span>Modo escuro</span>
       </button>
       <div class="font-controls" role="group" aria-label="Tamanho da fonte">
-        <button class="font-control" type="button" data-font-action="decrease" aria-label="Diminuir tamanho da fonte">A−</button>
-        <button class="font-control" type="button" data-font-action="reset" aria-label="Restaurar tamanho padrão da fonte">A</button>
-        <button class="font-control" type="button" data-font-action="increase" aria-label="Aumentar tamanho da fonte">A+</button>
+        <button class="font-control" type="button" data-font-action="decrease"
+          aria-label="Diminuir tamanho da fonte">A−</button>
+        <button class="font-control" type="button" data-font-action="reset"
+          aria-label="Restaurar tamanho padrão da fonte">A</button>
+        <button class="font-control" type="button" data-font-action="increase"
+          aria-label="Aumentar tamanho da fonte">A+</button>
       </div>
       <span id="font-status" class="sr-only" aria-live="polite" aria-atomic="true"></span>
       <span class="drag-hint">Arraste o botão redondo para mover</span>
     </div>
   </div>
 
-  <a class="btn-whatsapp" href="https://api.whatsapp.com/send?phone=5561985565339&amp;text=Ol%C3%A1%2C%20gostaria%20de%20falar%20sobre%20a%20reserva%20de%20um%20espa%C3%A7o." target="_blank" rel="noopener noreferrer" aria-label="Falar com o responsável pelo WhatsApp">
+  <a class="btn-whatsapp"
+    href="https://api.whatsapp.com/send?phone=5561985565339&amp;text=Ol%C3%A1%2C%20gostaria%20de%20falar%20sobre%20a%20reserva%20de%20um%20espa%C3%A7o."
+    target="_blank" rel="noopener noreferrer" aria-label="Falar com o responsável pelo WhatsApp">
     <img src="img/whatssapp.svg" alt="">
     <span class="whatsapp-tooltip">Falar com o responsável</span>
   </a>
@@ -151,4 +173,5 @@
   </form>
   <iframe id="booking-frame" name="booking-frame" title="Retorno do registro da reserva" hidden></iframe>
 </body>
+
 </html>

@@ -265,19 +265,33 @@ function selectRoom(roomId, scrollToForm) {
 }
 
 // Valida localmente os campos temporais antes de enviar uma reserva.
+
 function validateSubmission(formData) {
   const start = formData.get('start');
   const end = formData.get('end');
+  const whatsapp = formData.get('whatsapp').trim();
+
+  // Verifica o formato do WhatsApp.
+  const whatsappValido = /^\([1-9][0-9]\) 9[0-9]{4}-[0-9]{4}$/.test(whatsapp);
+
+  if (!whatsappValido) {
+    throw new Error('WhatsApp inválido! Digite no formato (61) 99999-9999.');
+  }
+
   if (!start || !end || end <= start) {
     throw new Error('Selecione um horário final posterior ao horário inicial.');
   }
+
   if (formData.get('date') < localDateString()) {
     throw new Error('A data da reserva não pode estar no passado.');
   }
+
   if (isTimeUnavailable(start, end)) {
     throw new Error('Esse período ficou indisponível. Escolha outro horário.');
   }
 }
+
+
 
 // Confirma a reserva usando a consulta de disponibilidade compatível com a implantação atual.
 async function waitForReservation(payload) {
@@ -308,16 +322,25 @@ function postReservation(payload) {
   return waitForReservation(payload);
 }
 
+
 reservationForm.addEventListener('submit', async (event) => {
-  // Intercepta o envio para validar, registrar e atualizar a disponibilidade.
   event.preventDefault();
   hideMessage(formMessage);
+
+  // Impede o registro se algum campo obrigatório ou pattern for inválido.
+  if (!reservationForm.checkValidity()) {
+    reservationForm.reportValidity();
+    return;
+  }
+
   const formData = new FormData(reservationForm);
 
   try {
     validateSubmission(formData);
+
     const payload = {
       professor: formData.get('professor').trim(),
+      whatsapp: formData.get('whatsapp').trim(),
       discipline: formData.get('discipline').trim(),
       course: formData.get('course').trim(),
       roomId: selectedRoomId,
@@ -341,7 +364,7 @@ reservationForm.addEventListener('submit', async (event) => {
     showMessage(formMessage, demoMode
       ? 'Reserva de demonstração adicionada neste navegador. Ela não foi enviada à Faculdade.'
       : 'Reserva feita com sucesso!',
-    demoMode ? 'warning' : 'success');
+      demoMode ? 'warning' : 'success');
     reservationForm.reset();
     dateInput.value = payload.date;
     roomSelect.value = selectedRoomId;
